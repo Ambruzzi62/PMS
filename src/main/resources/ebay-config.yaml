@@ -1,0 +1,16 @@
+name: ebay-config
+
+# Trading API OAuth - https://developer.ebay.com/api-docs/static/oauth-tokens.html
+
+# UPDATE the values in this file, before running the tests
+api.sandbox.ebay.com:
+    appid: SzabAndr-MonStarP-SBX-f2eb84eea-7865ce7d
+    certid: SBX-2eb84eea2eff-a599-45ef-8c35-04fc
+    devid: 73d6a638-073f-4e94-8929-45bb7f63df29
+    redirecturi: <redirect_uri-from-developer-portal>
+
+api.ebay.com:
+    appid: AndrasSz-PMS-PRD-10905fb5f-ca8d2ec5
+    certid: PRD-0905fb5f66e6-22bf-4692-b67a-8630
+    devid: 73d6a638-073f-4e94-8929-45bb7f63df29
+    redirecturi: Andras_Szabo-AndrasSz-PMS-PR-vhelyvccs

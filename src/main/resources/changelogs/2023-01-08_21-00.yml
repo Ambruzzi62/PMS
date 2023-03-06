@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: pms-image
+      author: bnd
+      changes:
+        - createTable:
+              tableName: pms_image
+              columns:
+                  - column:
+                        name: id
+                        type: bigint
+                        constraints:
+                            primaryKey: true
+                            nullable: false
+                  - column:
+                        name: name
+                        type: character varying(255)
+                  - column:
+                        name: path
+                        type: character varying(500)
+                  - column:
+                        name: list_order
+                        type: bigint
+                  - column:
+                        name: product_id
+                        type: bigint
+        - addForeignKeyConstraint:
+              constraintName: fk_pms_product_image_id
+              baseTableName: pms_image
+              baseColumnNames: product_id
+              referencedTableName: pms_product
+              referencedColumnNames: id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION

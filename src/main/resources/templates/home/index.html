@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{home.index.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <h1 th:text="#{home.index.headline}" class="mb-4" />
+            <p th:utext="#{home.index.text}" class="mb-5" />
+            <div class="col-md-4 mb-5">
+                <h4 th:text="#{home.index.exploreEntities}" class="mb-3" />
+                <div class="list-group">
+                    <a th:href="@{/pmsProducts}" th:text="#{pmsProduct.list.headline}" class="list-group-item list-group-item-action" />
+                    <a th:href="@{/pmsDescriptions}" th:text="#{pmsDescription.list.headline}" class="list-group-item list-group-item-action" />
+                    <a th:href="@{/pmsCategorys}" th:text="#{pmsCategory.list.headline}" class="list-group-item list-group-item-action" />
+                    <a th:href="@{/pmsUsers}" th:text="#{pmsUser.list.headline}" class="list-group-item list-group-item-action" />
+                    <a th:href="@{/pmsParameters}" th:text="#{pmsParameter.list.headline}" class="list-group-item list-group-item-action" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{pmsUser.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{pmsUser.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/pmsUsers/add}" th:text="#{pmsUser.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:replace="~{fragments/utils::searchFilter(object='pmsUser')}" />
+            <div th:if="${pmsUsers.empty}" th:text="#{pmsUser.list.empty}" />
+            <div th:if="${!pmsUsers.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th th:text="#{pmsUser.id.label}" scope="col" />
+                            <th th:text="#{pmsUser.name.label}" scope="col" />
+                            <th th:text="#{pmsUser.email.label}" scope="col" />
+                            <th th:text="#{pmsUser.password.label}" scope="col" />
+                            <th th:text="#{pmsUser.phone.label}" scope="col" />
+                            <th th:text="#{pmsUser.active.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pmsUser : ${pmsUsers}">
+                            <td th:text="${pmsUser.id}" />
+                            <td th:text="${pmsUser.name}" />
+                            <td th:text="${pmsUser.email}" />
+                            <td th:text="${pmsUser.password}" />
+                            <td th:text="${pmsUser.phone}" />
+                            <td th:text="${pmsUser.active}" />
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/pmsUsers/edit/{id}(id=${pmsUser.id})}" th:text="#{pmsUser.list.edit}" class="btn btn-sm btn-info" />
+                                    <form th:action="@{/pmsUsers/delete/{id}(id=${pmsUser.id})}"
+                                            th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm d-inline">
+                                        <button th:text="#{pmsUser.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{pmsCategory.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{pmsCategory.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/pmsCategorys/add}" th:text="#{pmsCategory.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:replace="~{fragments/utils::searchFilter(object='pmsCategory')}" />
+            <div th:if="${pmsCategorys.empty}" th:text="#{pmsCategory.list.empty}" />
+            <div th:if="${!pmsCategorys.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th th:text="#{pmsCategory.id.label}" scope="col" />
+                            <th th:text="#{pmsCategory.name.label}" scope="col" />
+                            <th th:text="#{pmsCategory.jofogasId.label}" scope="col" />
+                            <th th:text="#{pmsCategory.active.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pmsCategory : ${pmsCategorys}">
+                            <td th:text="${pmsCategory.id}" />
+                            <td th:text="${pmsCategory.name}" />
+                            <td th:text="${pmsCategory.jofogasId}" />
+                            <td th:text="${pmsCategory.active}" />
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/pmsCategorys/edit/{id}(id=${pmsCategory.id})}" th:text="#{pmsCategory.list.edit}" class="btn btn-sm btn-info" />
+                                    <form th:action="@{/pmsCategorys/delete/{id}(id=${pmsCategory.id})}"
+                                            th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm d-inline">
+                                        <button th:text="#{pmsCategory.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

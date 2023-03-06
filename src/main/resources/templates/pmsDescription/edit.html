@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{pmsDescription.edit.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{pmsDescription.edit.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/pmsDescriptions}" th:text="#{pmsDescription.edit.back}" class="btn btn-secondary" />
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('pmsDescription')}" />
+            <form th:action="${T(com.microida.pms.util.WebUtils).getRequest().requestURI}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='pmsDescription', field='name')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='pmsDescription', field='firstPart')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='pmsDescription', field='lastPart')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='pmsDescription', field='active', type='checkbox')}" />
+                <input type="submit" th:value="#{pmsDescription.edit.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

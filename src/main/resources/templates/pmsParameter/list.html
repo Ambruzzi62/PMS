@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{pmsParameter.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{pmsParameter.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/pmsParameters/add}" th:text="#{pmsParameter.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:replace="~{fragments/utils::searchFilter(object='pmsParameter')}" />
+            <div th:if="${pmsParameters.empty}" th:text="#{pmsParameter.list.empty}" />
+            <div th:if="${!pmsParameters.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th th:text="#{pmsParameter.key.label}" scope="col" />
+                            <th th:text="#{pmsParameter.value.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pmsParameter : ${pmsParameters}">
+                            <td th:text="${pmsParameter.key}" />
+                            <td th:text="${pmsParameter.value}" />
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/pmsParameters/edit/{key}(key=${pmsParameter.key})}" th:text="#{pmsParameter.list.edit}" class="btn btn-sm btn-info" />
+                                    <form th:action="@{/pmsParameters/delete/{key}(key=${pmsParameter.key})}"
+                                            th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm d-inline">
+                                        <button th:text="#{pmsParameter.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

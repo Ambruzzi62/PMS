@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{pmsImport.import.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{pmsImport.import.headline}" class="flex-grow-1" />
+            </div>
+            <form th:action="@{/pmsEbayImporter/import}" method="post">
+                <textarea rows="8" cols="175" name="productUrl"></textarea>
+                <input type="submit" th:value="#{pmsImport.import.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>
