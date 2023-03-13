@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: alter_product_table_id_original_int8
+      author: bnd
+      changes:
+        - modifyDataType:
+            tableName: pms_product
+            columnName: id_original
+            newDataType: bigint
+        - modifyDataType:
+            tableName: pms_product
+            columnName: price_own
+            newDataType: double

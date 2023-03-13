@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class PmsProduct {
     private String descriptionOwn;
 
     @Column
-    private Integer idOriginal;
+    private Long idOriginal;
 
     @Column(length = 500)
     private String nameOriginal;
@@ -56,7 +57,7 @@ public class PmsProduct {
     private Double priceOriginal;
 
     @Column
-    private String priceOwn;
+    private Double priceOwn;
 
     @Column
     private String sellerName;
