@@ -158,8 +158,8 @@ public class PmsProductController {
 
         String filename = number + "." + contentType.substring(contentType.indexOf("/") + 1);
         byte[] bytes = multipartFile.getBytes();
-        String insPath = "src/main/media/" + productId + "/"  + filename;
-        Files.write(Paths.get(insPath), bytes);
+        String imgPath = "src/main/media/" + productId + "/"  + filename;
+        Files.write(Paths.get(imgPath), bytes);
 
         return "redirect:/pmsProducts/images/" + productId;
     }

@@ -26,12 +26,7 @@ public class PmsParameter {
     @Column(length = 6000)
     private String value;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
+    @Column(length = 50)
+    private String type;
 
 }

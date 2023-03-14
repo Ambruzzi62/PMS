@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_parameter_openai_key
+      author: bnd
+      changes:
+        - dropColumn:
+            columnName: date_created
+            tableName: pms_parameter
+        - dropColumn:
+            columnName: last_updated
+            tableName: pms_parameter
+        - addColumn:
+            columns:
+              - column:
+                  name: type
+                  type: varchar(20)
+            tableName: pms_parameter

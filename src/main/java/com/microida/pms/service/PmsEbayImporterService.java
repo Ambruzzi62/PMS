@@ -13,9 +13,16 @@ import com.microida.pms.domain.PmsProduct;
 import com.microida.pms.util.OpenAIGPT;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
-import java.util.Date;
 
 
 @Service
@@ -23,11 +30,21 @@ public class PmsEbayImporterService {
 
     private final PmsProductService pmsProductService;
 
-    public PmsEbayImporterService(final PmsProductService pmsProductService) {
+    private final PmsParameterService pmsParameterService;
+
+    private static String EBAY_AUTHNAUTH_KEY;
+
+    public PmsEbayImporterService(final PmsProductService pmsProductService, final PmsParameterService pmsParameterService) {
         this.pmsProductService = pmsProductService;
+        this.pmsParameterService = pmsParameterService;
+        EBAY_AUTHNAUTH_KEY = pmsParameterService.get("EBAY_AUTHNAUTH_KEY").getValue();
     }
 
-    public void importProduct(){
+    public Long importProduct(String productUrl){
+        int start = productUrl.indexOf("/itm/") + 5;
+        int end = productUrl.indexOf("?");
+        String itemId = productUrl.substring(start, end);
+        Long productId = null;
         try {
             ApiContext apiContext = new ApiContext();
             CredentialUtil.load(Main.class.getClassLoader().getResourceAsStream("ebay-config.yaml"));
@@ -40,10 +57,10 @@ public class PmsEbayImporterService {
 
             apiContext.setApiCredential(cred);
             apiContext.setApiServerUrl("https://api.ebay.com/wsapi");
-            cred.seteBayToken("v^1.1#i^1#I^3#r^1#f^0#p^3#t^Ul4xMF82Ojc3NzZERUQ4NEM1QkZFOTJGNTA5NkM1QTA4ODk5QzMzXzNfMSNFXjI2MA==");
+            cred.seteBayToken(EBAY_AUTHNAUTH_KEY);
 
             GetItemCall apiCall = new GetItemCall(apiContext);
-            apiCall.setItemID("222506599297");
+            apiCall.setItemID(itemId);
             ItemType item =  apiCall.getItem();
 
             PmsProduct product = new PmsProduct();
@@ -68,10 +85,43 @@ public class PmsEbayImporterService {
             }
 
             product.setDateCreated(OffsetDateTime.now());
-            pmsProductService.create(product);
+            productId = pmsProductService.create(product);
+
+            saveItemPictures(productId, item.getPictureDetails().getPictureURL());
         } catch (Exception e) {
-            System.out.println("Failed to get the eBay official time.");
             e.printStackTrace();
+        }
+
+        return productId;
+    }
+
+    private void saveItemPictures(Long productId, String[] pictureUrls) throws IOException {
+        for (int i = 0; i < pictureUrls.length; i++) {
+            String imgPath = "src/main/media/" + productId + "/"  + i + ".jpg";
+            Path destinationPath = Paths.get(imgPath);
+
+            InputStream in = null;
+            FileOutputStream out = null;
+            try {
+                URL url = new URL(pictureUrls[i]);
+                URLConnection conn = url.openConnection();
+                in = conn.getInputStream();
+                Files.createDirectories(destinationPath.getParent());
+                out = new FileOutputStream(destinationPath.toFile());
+
+                byte[] buffer = new byte[1024];
+                int length;
+
+                while ((length = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, length);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                out.close();
+                in.close();
+            }
         }
     }
 }

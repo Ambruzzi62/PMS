@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_parameter_openai_key
+      author: bnd
+      changes:
+        - insert:
+            tableName: pms_parameter
+            columns:
+              - column:
+                  name: key
+                  value: OPENAI_API_KEY
+              - column:
+                  name: type
+                  value: STRING

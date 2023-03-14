@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_parameter_ebay_key
+      author: bnd
+      changes:
+        - insert:
+            tableName: pms_parameter
+            columns:
+              - column:
+                  name: key
+                  value: EBAY_AUTHNAUTH_KEY
+              - column:
+                  name: type
+                  value: STRING
