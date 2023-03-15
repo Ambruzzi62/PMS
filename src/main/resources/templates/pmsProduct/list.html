@@ -1,58 +1,90 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{layout}">
-    <head>
-        <title th:text="#{pmsProduct.list.headline}" />
-    </head>
-    <body>
-        <div layout:fragment="content">
-            <div class="d-flex flex-wrap mb-4">
-                <h1 th:text="#{pmsProduct.list.headline}" class="flex-grow-1" />
-                <div>
-                    <a th:href="@{/pmsProducts/add}" th:text="#{pmsProduct.list.createNew}" class="btn btn-primary ms-2" />
-                </div>
-            </div>
-            <div th:replace="~{fragments/utils::searchFilter(object='pmsProduct')}" />
-            <div th:if="${pmsProducts.empty}" th:text="#{pmsProduct.list.empty}" />
-            <div th:if="${!pmsProducts.empty}" class="table-responsive">
-                <table class="table table-striped table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th th:text="#{pmsProduct.id.label}" scope="col" />
-                            <th th:text="#{pmsProduct.catgoryOriginal.label}" scope="col" />
-                            <th th:text="#{pmsProduct.descriptionOriginal.label}" scope="col" />
-                            <th th:text="#{pmsProduct.descriptionOwn.label}" scope="col" />
-                            <th th:text="#{pmsProduct.idOriginal.label}" scope="col" />
-                            <th th:text="#{pmsProduct.nameOriginal.label}" scope="col" />
-                            <th th:text="#{pmsProduct.nameOwn.label}" scope="col" />
-                            <th th:text="#{pmsProduct.originalUrl.label}" scope="col" />
-                            <th><!-- --></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="pmsProduct : ${pmsProducts}">
-                            <td th:text="${pmsProduct.id}" />
-                            <td th:text="${pmsProduct.catgoryOriginal}" />
-                            <td th:text="${pmsProduct.descriptionOriginal}" />
-                            <td th:text="${pmsProduct.descriptionOwn}" />
-                            <td th:text="${pmsProduct.idOriginal}" />
-                            <td th:text="${pmsProduct.nameOriginal}" />
-                            <td th:text="${pmsProduct.nameOwn}" />
-                            <td th:text="${pmsProduct.originalUrl}" />
-                            <td>
-                                <div class="float-end text-nowrap">
-                                    <a th:href="@{/pmsProducts/edit/{id}(id=${pmsProduct.id})}" th:text="#{pmsProduct.list.edit}" class="btn btn-sm btn-info" />
-                                    <form th:action="@{/pmsProducts/delete/{id}(id=${pmsProduct.id})}"
-                                            th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm d-inline">
-                                        <button th:text="#{pmsProduct.list.delete}" type="submit" class="btn btn-sm btn-danger" />
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div th:replace="~{fragments/utils::pagination()}" />
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="#{pmsProduct.list.headline}" />
+
+    <script th:inline="javascript">
+        function sendSelectedDeals() {
+            var selectedIds = [];
+            $('.select-checkbox:checked').each(function() {
+                selectedIds.push(parseInt($(this).val()));
+            });
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    url: '/pmsProducts/upload',
+                    type: 'POST',
+                    data: JSON.stringify(selectedIds),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        // handle success response
+                    },
+                    error: function(xhr) {
+                        // handle error response
+                    }
+                });
+            }
+        }
+        $(document).ready(function() {
+            $('#select-all').click(function() {
+                $('.select-checkbox').prop('checked', $(this).prop('checked'));
+            });
+        });
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex flex-wrap mb-4">
+        <h1 th:text="#{pmsProduct.list.headline}" class="flex-grow-1" />
+        <div>
+            <a th:href="@{/pmsProducts/add}" th:text="#{pmsProduct.list.createNew}" class="btn btn-primary ms-2" />
         </div>
-    </body>
+        <div>
+            <button id="submit-selected" class="btn btn-primary" th:onclick="sendSelectedDeals()">Submit Selected</button>
+        </div>
+    </div>
+    <div th:replace="~{fragments/utils::searchFilter(object='pmsProduct')}" />
+    <div th:if="${pmsProducts.empty}" th:text="#{pmsProduct.list.empty}" />
+    <div th:if="${!pmsProducts.empty}" class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all" /></th>
+                <th th:text="#{pmsProduct.id.label}" scope="col" />
+                <th th:text="#{pmsProduct.catgoryOriginal.label}" scope="col" />
+                <th th:text="#{pmsProduct.descriptionOriginal.label}" scope="col" />
+                <th th:text="#{pmsProduct.descriptionOwn.label}" scope="col" />
+                <th th:text="#{pmsProduct.idOriginal.label}" scope="col" />
+                <th th:text="#{pmsProduct.nameOriginal.label}" scope="col" />
+                <th th:text="#{pmsProduct.nameOwn.label}" scope="col" />
+                <th th:text="#{pmsProduct.originalUrl.label}" scope="col" />
+                <th><!-- --></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pmsProduct : ${pmsProducts}">
+                <td><input type="checkbox" class="select-checkbox" th:value="${pmsProduct.id}" /></td>
+                <td th:text="${pmsProduct.id}" />
+                <td th:text="${pmsProduct.catgoryOriginal}" />
+                <td th:text="${pmsProduct.descriptionOriginal}" />
+                <td th:text="${pmsProduct.descriptionOwn}" />
+                <td th:text="${pmsProduct.idOriginal}" />
+                <td th:text="${pmsProduct.nameOriginal}" />
+                <td th:text="${pmsProduct.nameOwn}" />
+                <td th:text="${pmsProduct.originalUrl}" />
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a th:href="@{/pmsProducts/edit/{id}(id=${pmsProduct.id})}" th:text="#{pmsProduct.list.edit}" class="btn btn-sm btn-info" />
+                        <form th:action="@{/pmsProducts/delete/{id}(id=${pmsProduct.id})}"
+                              th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm d-inline">
+                            <button th:text="#{pmsProduct.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
 </html>

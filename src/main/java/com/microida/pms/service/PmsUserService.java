@@ -40,6 +40,12 @@ public class PmsUserService {
                 .orElseThrow(() -> new NotFoundException());
     }
 
+    public PmsUser getActiveUser(){
+        return pmsUserRepository.getActiveUser();
+    }
+
+
+
     public Long create(final PmsUser pmsUser) {
         return pmsUserRepository.save(pmsUser).getId();
     }

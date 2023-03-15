@@ -2,12 +2,12 @@ package com.microida.pms.controller;
 
 import com.microida.pms.domain.PmsCategory;
 import com.microida.pms.domain.PmsDescription;
-import com.microida.pms.domain.PmsImage;
 import com.microida.pms.domain.PmsProduct;
 import com.microida.pms.model.SimplePage;
 import com.microida.pms.repos.PmsCategoryRepository;
 import com.microida.pms.repos.PmsDescriptionRepository;
 import com.microida.pms.repos.PmsImageRepository;
+import com.microida.pms.service.PmsJofogasService;
 import com.microida.pms.service.PmsProductService;
 import com.microida.pms.util.WebUtils;
 import org.springframework.data.domain.Pageable;
@@ -21,20 +21,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,15 +40,18 @@ public class PmsProductController {
     private final PmsCategoryRepository pmsCategoryRepository;
     private final PmsDescriptionRepository pmsDescriptionRepository;
     private final PmsImageRepository pmsImageRepository;
+    private final PmsJofogasService pmsJofogasService;
 
     public PmsProductController(final PmsProductService pmsProductService,
                                 final PmsCategoryRepository pmsCategoryRepository,
                                 final PmsDescriptionRepository pmsDescriptionRepository,
-                                final PmsImageRepository pmsImageRepository) {
+                                final PmsImageRepository pmsImageRepository,
+                                final PmsJofogasService pmsJofogasService) {
         this.pmsProductService = pmsProductService;
         this.pmsCategoryRepository = pmsCategoryRepository;
         this.pmsDescriptionRepository = pmsDescriptionRepository;
         this.pmsImageRepository = pmsImageRepository;
+        this.pmsJofogasService = pmsJofogasService;
     }
 
     @ModelAttribute
@@ -117,6 +112,13 @@ public class PmsProductController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable final Long id, final RedirectAttributes redirectAttributes) {
         pmsProductService.delete(id);
+        redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("pmsProduct.delete.success"));
+        return "redirect:/pmsProducts";
+    }
+
+    @PostMapping("/upload")
+    public String upload(@RequestBody final List<Long> productIds, final RedirectAttributes redirectAttributes) {
+        pmsJofogasService.uploadProducts(productIds);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("pmsProduct.delete.success"));
         return "redirect:/pmsProducts";
     }
